@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    {% for subfield in form.radio %}
+        <form method="POST" action="">
+            <tr>
+                <td>{{ subfield }}</td>
+                <td>{{ subfield.label }}</td>
+            </tr>
+        </form>
+    {% endfor %}
+{% endblock content %}
