@@ -1,5 +1,5 @@
 from flask import render_template, url_for, redirect, request, flash
-from flaskflights.models import LoginForm, RegistrationForm, User, FlightSelect
+from flaskflights.models import LoginForm, RegistrationForm, User, FlightSelect, Aircraft
 from flaskflights import app, db
 
 #routes
@@ -29,5 +29,6 @@ def register():
 
 @app.route('/book', methods=['GET', 'POST'])
 def book():
-    form = FlightSelect()
+    form = FlightSelect
+    return render_template('book.html', form=form)
 

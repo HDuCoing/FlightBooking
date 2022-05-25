@@ -1,12 +1,55 @@
 {% extends "layout.html" %}
 
 {% block content %}
-    {% for subfield in form.radio %}
+    <div class="content-section">
         <form method="POST" action="">
-            <tr>
-                <td>{{ subfield }}</td>
-                <td>{{ subfield.label }}</td>
-            </tr>
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Pick Your Flight Dates:</legend>
+                <!-- choose flight dates leave/return -->
+                <div class="flight-dates">
+                    <h3>Leave on:</h3>
+                    {{form.leaveOn (class= "DateTimeField")}}
+                    <h3>Return on:</h3>
+                    {{form.returnOn (class= "DateTimeField")}}
+                    <div class="invalid-feedback">
+                        {% for error in form.leaveOn.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+
+                    <div class="invalid-feedback">
+                        {% for error in form.returnOn.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- choose flight times leave/return -->
+                <legend class="border-bottom mb-4">Flight Times:</legend>
+                <div class="flight-times">
+                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                        <div class="leave">
+                            {% for times in form.FlightSelect %}
+                                <p>{{ timeLeave }}</p>
+                                <p>{{ timeLeave.label }}</p>
+                            {% endfor %}
+                        </div>
+                        <div class="return">
+                            {% for times in form.FlightSelect %}
+                                <p>{{ timeReturn }}</p>
+                                <p>{{ timeReturn.label }}</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="invalid-feedback">
+                        {% for error in form.timeOfFlight.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+
+            </fieldset>
         </form>
-    {% endfor %}
+    </div>
 {% endblock content %}
