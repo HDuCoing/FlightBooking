@@ -29,6 +29,6 @@ def register():
 
 @app.route('/book', methods=['GET', 'POST'])
 def book():
-    form = FlightSelect
+    form = FlightSelect()
     return render_template('book.html', form=form)
 

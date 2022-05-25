@@ -33,17 +33,16 @@ class Aircraft(db.Model):
     flights = db.relationship('Flight', backref='aircraft', lazy=True, uselist=True)
 
 # --------------- for flight select -------------------
-flights = ['8:00 A.M.', '10:00 A.M.', '1:00 P.M.', '4:00 P.M.']
 aircrafts = ['SyberJet SJ30i', 'Cirrus SF50 1', 'Cirrus SF50 2', 'HondaJet Elite 1', 'HondaJet Elite 2']
 # will be aircraft + hour departure + seat number
 generateReference = []
 
 #forms--------------
 class FlightSelect(FlaskForm):
-    leaveOn = DateField('Leave On', format='%Y-%m-%d' )
+    leaveOn = DateField('Leave On', format='%Y-%m-%d')
     returnOn = DateField('Return On', format='%Y-%m-%d')
-    timeLeave = RadioField('Time of Flight', choices=[flights], validators=[DataRequired()])
-    timeReturn = RadioField('Time of Flight', choices=[flights], validators=[DataRequired()])
+    submit = SubmitField('Submit')
+
 
 # account registration
 class RegistrationForm(FlaskForm):
