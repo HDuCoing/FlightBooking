@@ -1,7 +1,14 @@
-from models import LoginForm, RegistrationForm, FlightSelect, AvailableFlights, Aircraft, Booking, User
+from forms import LoginForm, RegistrationForm, FlightSelect
+from models import  AvailableFlights, Aircraft, Booking, User
 
 
 # get flights available based on dates
 def flightsAvailable():
-    for column in AvailableFlights.c:
-        print(column)
+    for flight in AvailableFlights.c:
+        return flight
+
+# get user info - for authenticating
+def userAuth():
+    for user in User.c:
+        return [user.id, user.username, user.password]
+

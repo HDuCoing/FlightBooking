@@ -11,7 +11,7 @@ def home():
 def about():
     return render_template('about.html', title='About')
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
     return render_template('login.html', title='Login', form=form)
@@ -29,6 +29,12 @@ def register():
 
 @app.route('/book', methods=['GET', 'POST'])
 def book():
-    form = FlightSelect()
+    form = FlightSelect(request.form)
+    if request.method == 'POST':
+        leave = RegistrationForm(form.leaveOn.data)
+        return_on = RegistrationForm(form.returnOn.data)
+        dayLeave = leave
+
+        return redirect(url_for('flight_info'))
     return render_template('book.html', form=form)
 

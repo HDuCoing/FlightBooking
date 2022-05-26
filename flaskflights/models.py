@@ -1,7 +1,14 @@
-from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, RadioField, DateField
-from wtforms.validators import DataRequired, Email, EqualTo, Length
+from sqlalchemy import func
+from sqlalchemy.orm import session
+from flaskflights.forms import FlightSelect, RegistrationForm, LoginForm
+
 from flaskflights import db
+
+aircrafts = ['SyberJet SJ30i',
+             'Cirrus SF50 1',
+             'Cirrus SF50 2',
+             'HondaJet Elite 1',
+             'HondaJet Elite 2']
 
 # user details
 class User(db.Model):
@@ -14,7 +21,17 @@ class User(db.Model):
     def __repr__(self):
         return f"User('{self.username}','{self.email}')"
 
-# flight booking info
+# flight booking dates to be returned when you search for a flight
+class BookingDates(db.Model):
+    __tablename__ = 'bookingdates'
+    id = db.Column(db.Integer, primary_key=True)
+    leaveOn = db.Column(db.Integer, nullable=False)
+    returnOn = db.Column(db.Integer, nullable=False)
+
+    def __repr__(self):
+        return f"('{self.leaveOn}','{self.returnOn}')"
+
+# flight booking info for user's account info page
 class Booking(db.Model):
     __tablename__ = 'booking'
     id = db.Column(db.Integer, primary_key=True)
@@ -25,12 +42,7 @@ class Booking(db.Model):
     def __repr__(self):
         return f"Booking('{self.bookingRef}', '{self.flightDates}')"
 
-aircrafts = ['SyberJet SJ30i',
-             'Cirrus SF50 1',
-             'Cirrus SF50 2',
-             'HondaJet Elite 1',
-             'HondaJet Elite 2']
-
+# aircraft name + model, and capacity
 class Aircraft(db.Model):
     __tablename__ = 'aircraft'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -42,36 +54,12 @@ class Aircraft(db.Model):
 
 class AvailableFlights(db.Model):
     __tablename__ = 'available_flights'
-    date = db.Column(db.String, nullable=False)
-    time = db.Column(db.Integer, nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    # date equals flight select form output
+    dayOfFlight = db.Column(db.String, nullable=False)
     aircrafts = db.Column(db.String, nullable=False)
     seatsAvailable = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
         return f"AvailableFlights('{self.date}', '{self.time}')"
 
-# will be aircraft + hour departure + seat number
-generateReference = []
-
-#forms--------------
-class FlightSelect(FlaskForm):
-    leaveOn = DateField('Leave On', format='%Y-%m-%d')
-    returnOn = DateField('Return On', format='%Y-%m-%d')
-    submit = SubmitField('Submit')
-
-
-# account registration
-class RegistrationForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    confirm = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
-    submit = SubmitField('Sign Up')
-
-
-# account login
-class LoginForm(FlaskForm):
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    remember = BooleanField('Remember Me')
-    submit = SubmitField('Login')
