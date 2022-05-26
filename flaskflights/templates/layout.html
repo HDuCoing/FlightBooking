@@ -16,6 +16,7 @@
         <title>Flask Blog</title>
     {% endif %}
 </head>
+
 <body>
     <header class="site-header">
       <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
@@ -25,6 +26,7 @@
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarToggle">
+              <!-- Navbar Left Side -->
             <div class="navbar-nav mr-auto">
               <a class="nav-item nav-link" href="{{ url_for('home') }}">Home</a>
               <a class="nav-item nav-link" href="{{ url_for('about') }}">About</a>
@@ -39,6 +41,7 @@
         </div>
       </nav>
     </header>
+
     <main role="main" class="container">
       <div class="row">
         <div class="col-md-8">

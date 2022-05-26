@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% block content %}
+  <table>
+  {% for item in available_flights %}
+  <TR>
+     <TD class="c2">{{item.date}}</TD>
+     <TD class="c3">{{item.time}}</TD>
+     <TD class="c4"><SPAN>{{item.aircraft}}</SPAN></TD>
+     <TD class="c5"><SPAN>{{item.seatsAvailable}}</SPAN></TD>
+  </TR>
+  {% endfor %}
+  </table>
+{% endblock content %}

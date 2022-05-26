@@ -25,15 +25,31 @@ class Booking(db.Model):
     def __repr__(self):
         return f"Booking('{self.bookingRef}', '{self.flightDates}')"
 
+aircrafts = ['SyberJet SJ30i',
+             'Cirrus SF50 1',
+             'Cirrus SF50 2',
+             'HondaJet Elite 1',
+             'HondaJet Elite 2']
+
 class Aircraft(db.Model):
     __tablename__ = 'aircraft'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     model = db.Column(db.String(30), nullable=False)
     capacity = db.Column(db.Integer, nullable=False)
-    flights = db.relationship('Flight', backref='aircraft', lazy=True, uselist=True)
 
-# --------------- for flight select -------------------
-aircrafts = ['SyberJet SJ30i', 'Cirrus SF50 1', 'Cirrus SF50 2', 'HondaJet Elite 1', 'HondaJet Elite 2']
+    def __repr__(self):
+        return f"Aircraft('{self.model}','{self.capacity}')"
+
+class AvailableFlights(db.Model):
+    __tablename__ = 'available_flights'
+    date = db.Column(db.String, nullable=False)
+    time = db.Column(db.Integer, nullable=False)
+    aircrafts = db.Column(db.String, nullable=False)
+    seatsAvailable = db.Column(db.Integer, nullable=False)
+
+    def __repr__(self):
+        return f"AvailableFlights('{self.date}', '{self.time}')"
+
 # will be aircraft + hour departure + seat number
 generateReference = []
 
@@ -51,6 +67,8 @@ class RegistrationForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     confirm = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Sign Up')
+
+
 # account login
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
