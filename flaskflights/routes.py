@@ -20,21 +20,36 @@ def login():
 def register():
     form = RegistrationForm(request.form)
     if request.method == 'POST' and form.validate():
-        user = User(form.username.data, form.email.data,
-                    form.password.data)
+        #fixme TypeError: __init__() takes 1 positional argument but 4 were given
+        user = User(form.username.data, form.email.data, form.password.data)
         db.session.add(user)
         flash('Thanks for registering with AirDuCoing!')
         return redirect(url_for('login'))
     return render_template('register.html', form=form)
 
+#todo make search work
 @app.route('/book', methods=['GET', 'POST'])
 def book():
     form = FlightSelect(request.form)
+    # If user submits dates - take to listing of available flights in date range
     if request.method == 'POST':
-        leave = RegistrationForm(form.leaveOn.data)
-        return_on = RegistrationForm(form.returnOn.data)
-        dayLeave = leave
+        # specific date
+        leave = form.leaveOn.data
+        return_on = form.returnOn.data
+        location = form.location.data
+        
+        # day of week - monday is 0 - sunday is 6
+        dayLeave = leave.weekday()
+        dayReturn = return_on.weekday()
 
-        return redirect(url_for('flight_info'))
+        if dayLeave == 0: # if monday
+            #if flyFrom == 'Dairy Flat':
+            flights_available = [
+                '8:00 A.M. Dairy Flat to Rotorua',
+                '12 P.M. Rotorua to Dairy Flat',
+            ]
+
+        print("Location: " + location)
+        print("Leave: " + str(dayLeave) + " Return: " + str(dayReturn))
+        return render_template('flight_info.html')
     return render_template('book.html', form=form)
-
