@@ -29,9 +29,24 @@ class Booking(db.Model):
 class Aircraft(db.Model):
     __tablename__ = 'aircraft'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String, nullable=False)
     model = db.Column(db.String(30), nullable=False)
     capacity = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
-        return f"Aircraft('{self.model}','{self.capacity}')"
+        return f"Aircraft('{self.name}, {self.model}','{self.capacity}')"
 
+class AvailableFlights(db.Model):
+    __tablename__ = 'available_flights'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    timeOfFlight = db.Column(db.Integer, nullable=False)
+    dateOfFlight = db.Column(db.Date, nullable=False)
+    dayOfFlight = db.Column(db.String, nullable=False)
+    flyingFrom = db.Column(db.String, nullable=False)
+    stopsAt = db.Column(db.String, nullable=True)
+    flyingTo = db.Column(db.String, nullable=False)
+    aircraft = db.Column(db.String, nullable=False)
+    seatsLeft = db.Column(db.Integer, nullable=False)
+
+    def __repr__(self):
+        return f"Aircraft('{self.timeOfFlight}','{self.dateOfFlight}','{self.dayOfFlight}','{self.flyingFrom}','{self.stopsAt}','{self.flyingTo}','{self.aircraft}', '{self.seatsLeft}')"
