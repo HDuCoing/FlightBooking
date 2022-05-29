@@ -1,3 +1,4 @@
+from sqlalchemy import ForeignKey, Column, Integer
 from sqlalchemy.orm import relationship
 
 from flaskflights import db
@@ -34,6 +35,7 @@ class Aircraft(db.Model):
     name = db.Column(db.String, nullable=False)
     model = db.Column(db.String(30), nullable=False)
     capacity = db.Column(db.Integer, nullable=False)
+    flightChild = relationship("AvailableFlights")
 
     def __repr__(self):
         return f"Aircraft('{self.name}, {self.model}','{self.capacity}')"
@@ -47,7 +49,7 @@ class AvailableFlights(db.Model):
     flyingFrom = db.Column(db.String, nullable=False)
     stopsAt = db.Column(db.String, nullable=True)
     flyingTo = db.Column(db.String, nullable=False)
-    aircraft = relationship(Aircraft)
+    aircraft = Column(Integer, ForeignKey("aircraft.id"))
     seatsLeft = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
