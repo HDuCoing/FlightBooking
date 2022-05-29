@@ -1,8 +1,11 @@
 from flask import render_template, url_for, redirect, request, flash
+from sqlalchemy.orm import session, Query
+
 from flaskflights.models import User, Aircraft, AvailableFlights
 from flaskflights.forms import LoginForm, RegistrationForm, FlightSelect
 from flaskflights import app, db
-from sqlalchemy import insert
+from sqlalchemy import insert, select
+
 
 #routes
 @app.route("/")
@@ -51,6 +54,9 @@ def book():
             chosenDateRange.append(i)
 
         if location == 'Dairy Flat':
+            sess = session()
+            query = Query([AvailableFlights], session=sess)
+            print(query.column_descriptions)
             # friday morning - to rotorua then sydney - syberjet
 
             # monday through friday; - cirrus jets
@@ -60,7 +66,6 @@ def book():
             # tuesday and friday - to tuuta - hondajets
             # monday - to tekapo - hondajets
             # monday wednesday friday - morning - to great barrier island - cirrus jets
-            None
         elif location == 'Rotorua':
             # friday morning - to sydney - syberjet
 
@@ -80,5 +85,5 @@ def book():
         elif location == 'Great Barrier Island':
             # monday, friday, saturday - to dairy flat - cirrus jets
             None
-        return render_template('flight_info.html')
+        return render_template('flight_info.html', query=query)
     return render_template('book.html', form=form, title="Book", flights=flights)

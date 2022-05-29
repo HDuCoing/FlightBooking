@@ -1,9 +1,9 @@
 {% extends "layout.html" %}
 {% block content %}
   <table>
-  {% for item in flights %}
+  {% for item in query %}
   <TR>
-     <TD class="c2">{{item}}</TD>
+     <TD class="table-primary">{{item}}</TD>
   </TR>
   {% endfor %}
   </table>
