@@ -1,7 +1,7 @@
 from datetime import *
 import calendar
 
-from sqlalchemy import insert, schema
+from sqlalchemy import insert, schema, engine
 
 from flaskflights import db
 from flaskflights.models import AvailableFlights, Aircraft
@@ -100,4 +100,5 @@ def addToCalender():
                 GBItoDFs = AvailableFlights(timeOfFlight="2:00 P.M.",dateOfFlight=date(2022, monthNum, dateFlight),dayOfFlight=5, flyingFrom='Great Barrier Island', stopsAt=None,flyingTo='Dairy Flat',aircraft=cirrus1.name, seatsLeft=cirrus1.capacity)
                 db.session.add(GBItoDFs)
     db.session.commit()
+
 addToCalender()

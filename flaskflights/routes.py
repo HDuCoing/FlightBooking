@@ -1,4 +1,7 @@
 from flask import render_template, url_for, redirect, request, flash
+from sqlalchemy import select, engine, MetaData
+from sqlalchemy.orm import session, Mapper
+
 from flaskflights.models import User, Aircraft, AvailableFlights
 from flaskflights.forms import LoginForm, RegistrationForm, FlightSelect
 from flaskflights import app, db, bcrypt
@@ -66,9 +69,28 @@ def book():
         #todo if from sydney, diff time zone
         for i in range(dayLeave, dayReturn):
             chosenDateRange.append(i)
-        flights = AvailableFlights.query.all().filter(AvailableFlights.flyingFrom == location)
+        flightFrom = db.session.query(AvailableFlights.flyingFrom)\
+            .filter(AvailableFlights.flyingFrom==location)
+        stopsAt = db.session.query(AvailableFlights.stopsAt)\
+            .filter(AvailableFlights.flyingFrom==location)
+        flightTo = db.session.query(AvailableFlights.flyingTo)\
+            .filter(AvailableFlights.flyingFrom==location)
+        date = db.session.query(AvailableFlights.dateOfFlight)\
+            .filter(AvailableFlights.flyingFrom==location)
+        time = db.session.query(AvailableFlights.timeOfFlight)\
+            .filter(AvailableFlights.flyingFrom==location)
+        dayOf = db.session.query(AvailableFlights.dayOfFlight)\
+            .filter(AvailableFlights.flyingFrom==location)
+        aircraft = db.session.query(AvailableFlights.aircraft)\
+            .filter(AvailableFlights.flyingFrom==location)
+        seats = db.session.query(AvailableFlights.seatsLeft)\
+            .filter(AvailableFlights.flyingFrom==location)
 
-        return render_template('flight_info.html', flights=flights, headings=headings)
+
+        return render_template('flight_info.html',
+                               headings=headings,
+                               flyingFrom=flightFrom
+                               )
     return render_template('book.html', form=form, title="Book")
 
 @app.route("/logout")

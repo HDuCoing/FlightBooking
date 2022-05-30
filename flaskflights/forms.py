@@ -7,8 +7,8 @@ from flaskflights.models import User
 class FlightSelect(FlaskForm):
     locations=["Dairy Flat", "Rotorua", "Sydney", "Tuuta", "Great Barrier Island", "Tekapo"]
     location = SelectField('Fly From', choices=locations, validators=[DataRequired()])
-    leaveOn = DateField('Leave On', format='%Y-%m-%d')
-    returnOn = DateField('Return On', format='%Y-%m-%d')
+    leaveOn = DateField('Leave On', format='%Y-%m-%d', validators=[DataRequired()])
+    returnOn = DateField('Return On', format='%Y-%m-%d', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
 

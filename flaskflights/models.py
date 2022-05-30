@@ -1,4 +1,4 @@
-from sqlalchemy import ForeignKey, Column, Integer
+from sqlalchemy import ForeignKey, Column, Integer, MetaData
 from sqlalchemy.orm import relationship
 from flaskflights import db, login_manager
 from flask_login import UserMixin
