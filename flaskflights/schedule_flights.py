@@ -24,7 +24,7 @@ def addToCalender():
         for i in range(5):
             dateFlight = week[i][4] # day of week
             if dateFlight:
-                dairyToRotoSyd = AvailableFlights(timeOfFlight="8:00 A.M.", dateOfFlight=strftime("%{}/%{}/%2022".format(dateFlight, monthNum)),dayOfFlight=4,flyingFrom='Dairy Flat',stopsAt='Rotorua', flyingTo='Sydney',aircraft=syberJet1,seatsLeft=syberJet1.capacity)
+                dairyToRotoSyd = AvailableFlights(timeOfFlight="8:00 A.M.", dateOfFlight=datetime.Date(year=2022, month= monthNum, day= dateFlight),dayOfFlight=4,flyingFrom='Dairy Flat',stopsAt='Rotorua', flyingTo='Sydney',aircraft=syberJet1,seatsLeft=syberJet1.capacity)
                 db.session.add(dairyToRotoSyd)
 
             dateFlight = week[i][0]
@@ -100,5 +100,5 @@ def addToCalender():
             if dateFlight:
                 GBItoDFs = AvailableFlights(timeOfFlight="2:00 P.M.",dateOfFlight=strftime("%{}/%{}/%2022".format(dateFlight, monthNum)),dayOfFlight=5, flyingFrom='Great Barrier Island', stopsAt=None,flyingTo='Dairy Flat',aircraft=cirrus1, seatsLeft=cirrus1.capacity)
                 db.session.add(GBItoDFs)
-
+    db.session.commit()
 addToCalender()

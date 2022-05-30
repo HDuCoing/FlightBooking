@@ -37,9 +37,9 @@ def register():
 @app.route('/book', methods=['GET', 'POST'])
 def book():
     form = FlightSelect(request.form)
-    flights = AvailableFlights.query
     # If user submits dates - take to listing of available flights in date range
     if request.method == 'POST':
+        headings = ('Flying From', 'Stops', 'Flying To', 'Date', 'Time', 'Day Of Flight', 'Aircraft', 'Seats Left')
         # specific date
         leave = form.leaveOn.data
         return_on = form.returnOn.data
@@ -50,49 +50,11 @@ def book():
         dayReturn = return_on.weekday()
         chosenDateRange = []
         # create a range of weekdays for flight search
+
+        #todo if from sydney, diff time zone
         for i in range(dayLeave, dayReturn):
             chosenDateRange.append(i)
+        flights = AvailableFlights.query.all().filter(AvailableFlights.flyingFrom == location)
 
-        if location == 'Dairy Flat':
-            flights = select(
-                AvailableFlights.flyingFrom,
-                AvailableFlights.stopsAt,
-                AvailableFlights.flyingTo,
-                AvailableFlights.dateOfFlight,
-                AvailableFlights.dayOfFlight,
-                AvailableFlights.timeOfFlight,
-                AvailableFlights.aircraft
-            ).filter(AvailableFlights.flyingFrom == "Dairy Flat")
-            #flights = AvailableFlights.query.filter_by(flyingFrom="Dairy Flat").all()
-
-
-            # friday morning - to rotorua then sydney - syberjet
-
-            # monday through friday; - cirrus jets
-            # morning - to rotorua
-            # late afternoon - to rotorua
-
-            # tuesday and friday - to tuuta - hondajets
-            # monday - to tekapo - hondajets
-            # monday wednesday friday - morning - to great barrier island - cirrus jets
-        elif location == 'Rotorua':
-            # friday morning - to sydney - syberjet
-
-            # monday through friday; - cirrus jets
-            # noon - to dairy flat
-            # evening - to dairy flat
-            None
-        elif location == 'Tuuta':
-            # wednesday and saturday - to dairy flat - HondaJets
-            None
-        elif location == 'Sydney':
-            # sunday afternoon - to dairy flat - syberjet
-            None
-        elif location == 'Tekapo':
-            # friday - to dairy flat - hondajet
-            None
-        elif location == 'Great Barrier Island':
-            # monday, friday, saturday - to dairy flat - cirrus jets
-            None
-        return render_template('flight_info.html', flights=flights)
+        return render_template('flight_info.html', flights=flights, headings=headings)
     return render_template('book.html', form=form, title="Book")

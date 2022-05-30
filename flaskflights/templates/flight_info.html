@@ -1,10 +1,15 @@
 {% extends "layout.html" %}
 {% block content %}
   <table>
-      {{% for item in flights %}}
-    <TR>
-       <TD class="table-primary">{{item}}</TD>
-    </TR>
-      {{% endfor %}}
+    <tr>
+        {% for header in headings %}
+        <th>{{ header }}</th>
+        {% endfor %}
+    </tr>
+    <tr>
+        {% for cell in flights %}
+        <td>{{ cell }}</td>
+        {% endfor %}
+    </tr>
   </table>
 {% endblock content %}
