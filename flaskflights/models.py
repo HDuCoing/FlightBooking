@@ -1,6 +1,5 @@
 from sqlalchemy import ForeignKey, Column, Integer
 from sqlalchemy.orm import relationship
-
 from flaskflights import db
 
 
