@@ -89,7 +89,14 @@ def book():
 
         return render_template('flight_info.html',
                                headings=headings,
-                               flyingFrom=flightFrom
+                               flyingFrom=flightFrom,
+                               stopsAt=stopsAt,
+                               flightTo=flightTo,
+                               date=date,
+                               time=time,
+                               dayOf=dayOf,
+                               aircraft=aircraft,
+                               seats=seats
                                )
     return render_template('book.html', form=form, title="Book")
 

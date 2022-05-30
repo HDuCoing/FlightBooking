@@ -1,13 +1,17 @@
 {% extends "layout.html" %}
 {% block content %}
-<div class="content-section">
+<div>
   <table class="table table-hover">
+<!-- headers -->
+    <thead>
     <tr>
         {% for header in headings %}
         <th>{{ header }}</th>
         {% endfor %}
     </tr>
-
+    </thead>
+    <tbody>
+<!-- new row -->
       {% for from in flyingFrom %}
     <tr>
         {% for cell in from %}
@@ -15,7 +19,7 @@
         {% endfor %}
     </tr>
       {% endfor %}
-
+<!-- new row -->
     {% for stop in stopsAt %}
     <tr>
         {% for cell in stop %}
@@ -23,7 +27,55 @@
         {% endfor %}
     </tr>
       {% endfor %}
-
+<!-- new row -->
+    {% for to in flightTo %}
+    <tr>
+        {% for cell in to %}
+        <td>{{ cell }}</td>
+        {% endfor %}
+    </tr>
+      {% endfor %}
+<!-- new row -->
+    {% for d in date %}
+    <tr>
+        {% for cell in d %}
+        <td>{{ cell }}</td>
+        {% endfor %}
+    </tr>
+      {% endfor %}
+<!-- new row -->
+    {% for t in time %}
+    <tr>
+        {% for cell in t %}
+        <td>{{ cell }}</td>
+        {% endfor %}
+    </tr>
+      {% endfor %}
+<!-- new row -->
+    {% for day in dayOf %}
+    <tr>
+        {% for cell in day %}
+        <td>{{ cell }}</td>
+        {% endfor %}
+    </tr>
+      {% endfor %}
+<!-- new row -->
+    {% for a in aircraft %}
+    <tr>
+        {% for cell in a %}
+        <td>{{ cell }}</td>
+        {% endfor %}
+    </tr>
+      {% endfor %}
+<!-- new row -->
+    {% for seat in seats %}
+    <tr>
+        {% for cell in seat %}
+        <td>{{ cell }}</td>
+        {% endfor %}
+    </tr>
+      {% endfor %}
+    </tbody>
   </table>
 </div>
 {% endblock content %}
