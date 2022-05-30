@@ -1,10 +1,8 @@
 from flask import render_template, url_for, redirect, request, flash
-from sqlalchemy.orm import session, Query, query, aliased
-
 from flaskflights.models import User, Aircraft, AvailableFlights
 from flaskflights.forms import LoginForm, RegistrationForm, FlightSelect
-from flaskflights import app, db
-from sqlalchemy import insert, select, func
+from flaskflights import app, db, bcrypt
+from flask_login import login_user, current_user, logout_user, login_required
 
 
 #routes
@@ -18,23 +16,37 @@ def about():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
     form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
+            login_user(user, remember=form.remember.data)
+            next_page = request.args.get('next')
+            return redirect(next_page) if next_page else redirect(url_for('home'))
+        else:
+            flash('Login failed. Please check username and password.', 'error')
     return render_template('login.html', title='Login', form=form)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
     form = RegistrationForm(request.form)
-    if request.method == 'POST' and form.validate():
-        #fixme TypeError: __init__() takes 1 positional argument but 4 were given
-        user = User(form.username.data, form.email.data, form.password.data)
+    if form.validate_on_submit():
+        hashed_pw = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        user = User(username=form.username.data, email=form.email.data, password=hashed_pw)
         db.session.add(user)
-        flash('Thanks for registering with AirDuCoing!')
+        db.session.commit()
+        flash(f'Thanks for registering with AirDuCoing!, {form.username.data}', 'success')
         return redirect(url_for('login'))
     return render_template('register.html', form=form, title="Register")
 
 
 #todo make search work
 @app.route('/book', methods=['GET', 'POST'])
+@login_required
 def book():
     form = FlightSelect(request.form)
     # If user submits dates - take to listing of available flights in date range
@@ -58,3 +70,19 @@ def book():
 
         return render_template('flight_info.html', flights=flights, headings=headings)
     return render_template('book.html', form=form, title="Book")
+
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
+
+@app.route("/account")
+@login_required
+def account():
+    return render_template('account.html', title='Account')
+
+@app.route('/confirmbooking')
+@login_required
+def confirm_booking():
+
+    return render_template('confirm_booking.html', title="Confirm")
