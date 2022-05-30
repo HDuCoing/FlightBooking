@@ -1,12 +1,11 @@
 from flask import render_template, url_for, redirect, request, flash
-from sqlalchemy import select, engine, MetaData
-from sqlalchemy.orm import session, Mapper
-
-from flaskflights.models import User, Aircraft, AvailableFlights
-from flaskflights.forms import LoginForm, RegistrationForm, FlightSelect
-from flaskflights import app, db, bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
 
+from flaskflights import app, db, bcrypt
+from flaskflights.forms import LoginForm, RegistrationForm, FlightSelect
+from flaskflights.models import User, AvailableFlights
+
+import pandas as pd
 
 #routes
 @app.route("/")
@@ -54,49 +53,33 @@ def book():
     form = FlightSelect(request.form)
     # If user submits dates - take to listing of available flights in date range
     if request.method == 'POST':
-        headings = ('Flying From', 'Stops', 'Flying To', 'Date', 'Time', 'Day Of Flight', 'Aircraft', 'Seats Left')
+        headings = ('Select', 'Flying From', 'Stops', 'Flying To', 'Date', 'Day Of Flight', 'Time', 'Aircraft', 'Seats Left')
         # specific date
         leave = form.leaveOn.data
-        return_on = form.returnOn.data
         location = form.location.data
-        
         # day of week - monday is 0 - sunday is 6
         dayLeave = leave.weekday()
-        dayReturn = return_on.weekday()
-        chosenDateRange = []
         # create a range of weekdays for flight search
-
         #todo if from sydney, diff time zone
-        for i in range(dayLeave, dayReturn):
-            chosenDateRange.append(i)
-        flightFrom = db.session.query(AvailableFlights.flyingFrom)\
-            .filter(AvailableFlights.flyingFrom==location)
-        stopsAt = db.session.query(AvailableFlights.stopsAt)\
-            .filter(AvailableFlights.flyingFrom==location)
-        flightTo = db.session.query(AvailableFlights.flyingTo)\
-            .filter(AvailableFlights.flyingFrom==location)
-        date = db.session.query(AvailableFlights.dateOfFlight)\
-            .filter(AvailableFlights.flyingFrom==location)
-        time = db.session.query(AvailableFlights.timeOfFlight)\
-            .filter(AvailableFlights.flyingFrom==location)
-        dayOf = db.session.query(AvailableFlights.dayOfFlight)\
-            .filter(AvailableFlights.flyingFrom==location)
-        aircraft = db.session.query(AvailableFlights.aircraft)\
-            .filter(AvailableFlights.flyingFrom==location)
-        seats = db.session.query(AvailableFlights.seatsLeft)\
-            .filter(AvailableFlights.flyingFrom==location)
-
-
+        flights = AvailableFlights.query.filter(AvailableFlights.flyingFrom==location,AvailableFlights.dateOfFlight==leave)
+        if dayLeave == 0:
+            dayLeave = "Monday"
+        if dayLeave == 1:
+            dayLeave = "Tuesday"
+        if dayLeave == 2:
+            dayLeave = "Wednesday"
+        if dayLeave == 3:
+            dayLeave = "Thursday"
+        if dayLeave == 4:
+            dayLeave = "Friday"
+        if dayLeave == 5:
+            dayLeave = "Saturday"
+        if dayLeave == 6:
+            dayLeave = "Sunday"
         return render_template('flight_info.html',
                                headings=headings,
-                               flyingFrom=flightFrom,
-                               stopsAt=stopsAt,
-                               flightTo=flightTo,
-                               date=date,
-                               time=time,
-                               dayOf=dayOf,
-                               aircraft=aircraft,
-                               seats=seats
+                               flights=flights,
+                               dayOfFlight=dayLeave
                                )
     return render_template('book.html', form=form, title="Book")
 

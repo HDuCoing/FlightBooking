@@ -1,7 +1,20 @@
 {% extends "layout.html" %}
+
 {% block content %}
-<div>
-  <table class="table table-hover">
+
+<script>
+  $("tbody tr").click(function () {
+    $('.selected').removeClass('selected');
+    $(this).addClass("selected");
+    var product = $('.p',this).html();
+    var infRate =$('.i',this).html();
+    var note =$('.n',this).html();
+    alert(product +','+ infRate+','+ note);
+    });
+</script>
+
+<div id="divContainer">
+<table class="formatHTML5 table">
 <!-- headers -->
     <thead>
     <tr>
@@ -11,70 +24,19 @@
     </tr>
     </thead>
     <tbody>
-<!-- new row -->
-      {% for from in flyingFrom %}
+      {% for flight in flights %}
     <tr>
-        {% for cell in from %}
-        <td>{{ cell }}</td>
-        {% endfor %}
+        <td><label><input type="button"></label></td>
+        <td>{{ flight.flyingFrom }}</td>
+        <td>{{ flight.stopsAt }}</td>
+        <td>{{ flight.flyingTo }}</td>
+        <td>{{ flight.dateOfFlight }}</td>
+        <td>{{ dayOfFlight }}</td>
+        <td>{{ flight.timeOfFlight }}</td>
+        <td>{{ flight.aircraft }}</td>
+        <td>{{ flight.seatsLeft }}</td>
     </tr>
-      {% endfor %}
-<!-- new row -->
-    {% for stop in stopsAt %}
-    <tr>
-        {% for cell in stop %}
-        <td>{{ cell }}</td>
-        {% endfor %}
-    </tr>
-      {% endfor %}
-<!-- new row -->
-    {% for to in flightTo %}
-    <tr>
-        {% for cell in to %}
-        <td>{{ cell }}</td>
-        {% endfor %}
-    </tr>
-      {% endfor %}
-<!-- new row -->
-    {% for d in date %}
-    <tr>
-        {% for cell in d %}
-        <td>{{ cell }}</td>
-        {% endfor %}
-    </tr>
-      {% endfor %}
-<!-- new row -->
-    {% for t in time %}
-    <tr>
-        {% for cell in t %}
-        <td>{{ cell }}</td>
-        {% endfor %}
-    </tr>
-      {% endfor %}
-<!-- new row -->
-    {% for day in dayOf %}
-    <tr>
-        {% for cell in day %}
-        <td>{{ cell }}</td>
-        {% endfor %}
-    </tr>
-      {% endfor %}
-<!-- new row -->
-    {% for a in aircraft %}
-    <tr>
-        {% for cell in a %}
-        <td>{{ cell }}</td>
-        {% endfor %}
-    </tr>
-      {% endfor %}
-<!-- new row -->
-    {% for seat in seats %}
-    <tr>
-        {% for cell in seat %}
-        <td>{{ cell }}</td>
-        {% endfor %}
-    </tr>
-      {% endfor %}
+    {% endfor %}
     </tbody>
   </table>
 </div>
