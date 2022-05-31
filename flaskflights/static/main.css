@@ -33,11 +33,9 @@ h1, h2, h3, h4, h5, h6 {
 
 }
 
-
-table.formatHTML5 tr.selected {
-            background-color: #e92929 !important;
-    color:#fff;
-            vertical-align: middle;
-            padding: 1.5em;
-        }
-
+#footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 2.5rem;
+}

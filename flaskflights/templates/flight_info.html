@@ -2,19 +2,28 @@
 
 {% block content %}
 
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="home">Home</a></li>
+    <li class="breadcrumb-item"><a href="book">Search</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Book</li>
+  </ol>
+</nav>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
-  $("tbody tr").click(function () {
-    $('.selected').removeClass('selected');
-    $(this).addClass("selected");
-    var product = $('.p',this).html();
-    var infRate =$('.i',this).html();
-    var note =$('.n',this).html();
-    alert(product +','+ infRate+','+ note);
+const bsButton = new bootstrap.Button('#button')
+    $(document).ready(function () {
+        $(bsButton).click(function (){
+            $("#flight_table").hide(2000, function (){
+                alert("test")
+            });
+        });
     });
 </script>
 
-<div id="divContainer">
-<table class="formatHTML5 table">
+<div>
+<table class="flight_table table-striped border border-warning table-hover">
 <!-- headers -->
     <thead>
     <tr>
@@ -25,16 +34,16 @@
     </thead>
     <tbody>
       {% for flight in flights %}
-    <tr>
-        <td><label><input type="button"></label></td>
-        <td>{{ flight.flyingFrom }}</td>
-        <td>{{ flight.stopsAt }}</td>
-        <td>{{ flight.flyingTo }}</td>
-        <td>{{ flight.dateOfFlight }}</td>
-        <td>{{ dayOfFlight }}</td>
-        <td>{{ flight.timeOfFlight }}</td>
-        <td>{{ flight.aircraft }}</td>
-        <td>{{ flight.seatsLeft }}</td>
+    <tr id="rows">
+        <td><input type="radio" class="btn-check" name="options" id="option1" autocomplete="off" checked></td>
+        <td id="flyingFrom">{{ flight.flyingFrom }}</td>
+        <td id="stopsAt">{{ flight.stopsAt }}</td>
+        <td id="flyingTo">{{ flight.flyingTo }}</td>
+        <td id="dateOfFlight">{{ flight.dateOfFlight }}</td>
+        <td id="dayOfFlight">{{ dayOfFlight }}</td>
+        <td id="timeOfFlight">{{ flight.timeOfFlight }}</td>
+        <td id="aircraft">{{ flight.aircraft }}</td>
+        <td id="seatsLeft">{{ flight.seatsLeft }}</td>
     </tr>
     {% endfor %}
     </tbody>

@@ -1,8 +1,13 @@
 {% extends "layout.html" %}
-
 {% block content %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="home">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Book</li>
+  </ol>
+</nav>
 <div class="content-section">
-    <form method="POST" action="">
+    <form method="POST">
         <fieldset class="form-group">
             <legend class="border-bottom mb-4">Search For Flights:</legend>
             <div class="content-section">
@@ -12,11 +17,11 @@
 <!-- Date entry and submit button -->
                 <div class="form-group">
                         <div class="row">
-                        <div class="col-sm">
+                        <div class="col-sm form-select">
                             {{ form.leaveOn.label(class="form-control-label") }}
                             {{ form.leaveOn (class= "DateTimeField") }}
                         </div>
-                        <div class="col-sm">
+                        <div class="col-sm form-select">
                             {{ form.returnOn.label(class="form-control-label") }}
                             {{ form.returnOn (class= "DateTimeField") }}
                         </div>

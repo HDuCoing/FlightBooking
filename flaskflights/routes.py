@@ -9,6 +9,8 @@ import pandas as pd
 
 #routes
 @app.route("/")
+@app.route("/home")
+@app.route("/index")
 def home():
     return render_template('home.html', title='Home')
 
