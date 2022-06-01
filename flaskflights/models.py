@@ -21,12 +21,12 @@ class User(db.Model, UserMixin):
 class Booking(db.Model):
     __tablename__ = 'booking'
     id = db.Column(db.Integer, primary_key=True)
-    # user ID
     user = db.Column(db.Integer, nullable=False)
     bookingRef = db.Column(db.String(100), nullable=False)
     flightDates = db.Column(db.Integer, nullable=False)
     booking_id = db.Column(db.Integer, db.ForeignKey('booking.id'), nullable=False)
-    aircraft = db.Column(db.String)
+    payment = db.Column(db.Integer, nullable=False)
+    #bookedFlight = relationship('AvailableFlights')
 
     def __repr__(self):
         return f"Booking('{self.bookingRef}', '{self.flightDates}')"

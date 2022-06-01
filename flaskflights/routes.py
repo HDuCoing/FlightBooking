@@ -5,7 +5,6 @@ from flaskflights import app, db, bcrypt
 from flaskflights.forms import LoginForm, RegistrationForm, FlightSelect
 from flaskflights.models import User, AvailableFlights
 
-import pandas as pd
 
 #routes
 @app.route("/")
@@ -54,14 +53,17 @@ def register():
 def book():
     form = FlightSelect(request.form)
     # If user submits dates - take to listing of available flights in date range
+    if request.method == 'GET':
+        print(request.args)
+        return redirect(url_for('confirm'))
     if request.method == 'POST':
-        headings = ('Select', 'Flying From', 'Stops', 'Flying To', 'Date', 'Day Of Flight', 'Time', 'Aircraft', 'Seats Left')
+        headings = ('Flying From', 'Stops', 'Flying To', 'Date', 'Day Of Flight', 'Time', 'Aircraft', 'Seats Left', 'Select')
         # specific date
         leave = form.leaveOn.data
         location = form.location.data
         # day of week - monday is 0 - sunday is 6
         dayLeave = leave.weekday()
-        # create a range of weekdays for flight search
+        # create a range of weekdays for flight searc
         #todo if from sydney, diff time zone
         flights = AvailableFlights.query.filter(AvailableFlights.flyingFrom==location,AvailableFlights.dateOfFlight==leave)
         if dayLeave == 0:
@@ -78,12 +80,14 @@ def book():
             dayLeave = "Saturday"
         if dayLeave == 6:
             dayLeave = "Sunday"
-        return render_template('flight_info.html',
-                               headings=headings,
-                               flights=flights,
-                               dayOfFlight=dayLeave
-                               )
+        return render_template('flight_info.html',headings=headings,flights=flights, dayOfFlight=dayLeave)
     return render_template('book.html', form=form, title="Book")
+
+@app.route('/confirm')
+@login_required
+def confirm_booking():
+    return render_template('confirm_booking.html', title="Confirm")
+
 
 @app.route("/logout")
 def logout():
@@ -95,8 +99,3 @@ def logout():
 def account():
     return render_template('account.html', title='Account')
 
-@app.route('/confirmbooking')
-@login_required
-def confirm_booking():
-
-    return render_template('confirm_booking.html', title="Confirm")

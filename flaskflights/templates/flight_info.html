@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block content %}
-
+<!-- breadcrumb for purchase process -->
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="home">Home</a></li>
@@ -9,44 +9,37 @@
     <li class="breadcrumb-item active" aria-current="page">Book</li>
   </ol>
 </nav>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script>
-const bsButton = new bootstrap.Button('#button')
-    $(document).ready(function () {
-        $(bsButton).click(function (){
-            $("#flight_table").hide(2000, function (){
-                alert("test")
-            });
-        });
-    });
-</script>
-
 <div>
-<table class="flight_table table-striped border border-warning table-hover">
-<!-- headers -->
-    <thead>
-    <tr>
-        {% for header in headings %}
-        <th>{{ header }}</th>
-        {% endfor %}
-    </tr>
-    </thead>
-    <tbody>
-      {% for flight in flights %}
-    <tr id="rows">
-        <td><input type="radio" class="btn-check" name="options" id="option1" autocomplete="off" checked></td>
-        <td id="flyingFrom">{{ flight.flyingFrom }}</td>
-        <td id="stopsAt">{{ flight.stopsAt }}</td>
-        <td id="flyingTo">{{ flight.flyingTo }}</td>
-        <td id="dateOfFlight">{{ flight.dateOfFlight }}</td>
-        <td id="dayOfFlight">{{ dayOfFlight }}</td>
-        <td id="timeOfFlight">{{ flight.timeOfFlight }}</td>
-        <td id="aircraft">{{ flight.aircraft }}</td>
-        <td id="seatsLeft">{{ flight.seatsLeft }}</td>
-    </tr>
-    {% endfor %}
-    </tbody>
-  </table>
+<form method="GET">
+    <fieldset class="form-group">
+        <table class="flight_table table-striped border table-hover">
+        <!-- headers -->
+            <thead>
+            <tr>
+                {% for header in headings %}
+                <th>{{ header }}</th>
+                {% endfor %}
+            </tr>
+            </thead>
+            <tbody>
+              {% for flight in flights %}
+            <tr id="rows">
+                <td id="flyingFrom">{{ flight.flyingFrom }}</td>
+                <td id="stopsAt">{{ flight.stopsAt }}</td>
+                <td id="flyingTo">{{ flight.flyingTo }}</td>
+                <td id="dateOfFlight">{{ flight.dateOfFlight }}</td>
+                <td id="dayOfFlight">{{ dayOfFlight }}</td>
+                <td id="timeOfFlight">{{ flight.timeOfFlight }}</td>
+                <td id="aircraft">{{ flight.aircraft }}</td>
+                <td id="seatsLeft">{{ flight.seatsLeft }}</td>
+                <input id="flightID" name="flightID"
+                       type="hidden" value="{{rows}}">
+                <td><button type="submit" name="edit" value="{{ td }}" formmethod="get">Select</button></td>
+            </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </fieldset>
+    </form>
 </div>
 {% endblock content %}
