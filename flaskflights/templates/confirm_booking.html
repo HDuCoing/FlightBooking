@@ -1,5 +1,22 @@
 {% extends "layout.html" %}
 
 {% block content %}
-
+<div class="card" style="width: auto;">
+    <div class="content-section">
+        <h5 class="card-title">Confirm your booking?</h5>
+        <h6 class="card-subtitle mb-2 text-muted">Payment information will be in Account</h6>
+    </div>
+    <div class="card-body">
+        <form method="POST">
+        <table class="table table-borderless">
+            {% for info in flight %}
+                <tr id="rows">
+                    <td>{{ info }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        </form>
+        <button type="button" class="btn btn-secondary">Confirm</button>
+    </div>
+</div>
 {% endblock content %}

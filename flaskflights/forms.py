@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, DateField, SelectField
 from wtforms.validators import DataRequired, Email, EqualTo, Length, ValidationError
 from flaskflights.models import User
+from flask_login import current_user
 
 # flight select from date field inputs on /book
 class FlightSelect(FlaskForm):

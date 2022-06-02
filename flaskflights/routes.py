@@ -52,10 +52,13 @@ def register():
 @login_required
 def book():
     form = FlightSelect(request.form)
-    # If user submits dates - take to listing of available flights in date range
     if request.method == 'GET':
-        print(request.args)
-        return redirect(url_for('confirm'))
+        args = request.args
+        for element in args:
+            flight = element
+            if flight:
+                return confirm(flight)
+
     if request.method == 'POST':
         headings = ('Flying From', 'Stops', 'Flying To', 'Date', 'Day Of Flight', 'Time', 'Aircraft', 'Seats Left', 'Select')
         # specific date
@@ -84,9 +87,25 @@ def book():
     return render_template('book.html', form=form, title="Book")
 
 @app.route('/confirm')
-@login_required
-def confirm_booking():
-    return render_template('confirm_booking.html', title="Confirm")
+def confirm(flight):
+    flightContent = flight.strip("Aircraft")
+    flightContent = flightContent.strip("(")
+    flightContent = flightContent.strip(")")
+    flightContent = flightContent.split(",")
+    time = "Time: " + flightContent[0]
+    date = "Date: " + flightContent[1]
+    flyFrom = "Flying From: " + flightContent[3]
+    stopAt = "Stops At: " + flightContent[4]
+    flyTo = "Flying To: " + flightContent[5]
+    aircraft = "Aircraft: " + flightContent[6]
+    price = "Price: $50"
+    if "Sydney" in flyTo:
+        price = "Price: $200"
+    flight_info = [time, date, flyFrom, stopAt, flyTo, aircraft,price]
+    #if request.method == "POST":
+
+
+    return render_template('confirm_booking.html', title="Confirm", flight=flight_info)
 
 
 @app.route("/logout")

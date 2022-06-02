@@ -21,15 +21,12 @@ class User(db.Model, UserMixin):
 class Booking(db.Model):
     __tablename__ = 'booking'
     id = db.Column(db.Integer, primary_key=True)
-    user = db.Column(db.Integer, nullable=False)
-    bookingRef = db.Column(db.String(100), nullable=False)
-    flightDates = db.Column(db.Integer, nullable=False)
-    booking_id = db.Column(db.Integer, db.ForeignKey('booking.id'), nullable=False)
-    payment = db.Column(db.Integer, nullable=False)
-    #bookedFlight = relationship('AvailableFlights')
+    user = db.Column(db.String, nullable=False)
+    price = db.Column(db.Integer, nullable=False)
+    flight = Column(Integer, ForeignKey("available_flights.id"))
 
     def __repr__(self):
-        return f"Booking('{self.bookingRef}', '{self.flightDates}')"
+        return f"Booking('{self.bookingRef}', '{self.user}', '{self.flight}', '{self.price}')"
 
 # aircraft name + model, and capacity
 class Aircraft(db.Model):

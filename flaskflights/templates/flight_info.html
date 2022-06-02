@@ -1,5 +1,13 @@
 {% extends "layout.html" %}
+<script>
 
+    function setAction(form) {
+  form.action = "confirm_booking.html";
+  alert(form.action);
+  return false;
+}
+
+</script>
 {% block content %}
 <!-- breadcrumb for purchase process -->
 <nav aria-label="breadcrumb">
@@ -32,9 +40,7 @@
                 <td id="timeOfFlight">{{ flight.timeOfFlight }}</td>
                 <td id="aircraft">{{ flight.aircraft }}</td>
                 <td id="seatsLeft">{{ flight.seatsLeft }}</td>
-                <input id="flightID" name="flightID"
-                       type="hidden" value="{{rows}}">
-                <td><button type="submit" name="edit" value="{{ td }}" formmethod="get">Select</button></td>
+                <td><button id="button" type="submit" name="{{flight}}">Select</button></td>
             </tr>
             {% endfor %}
             </tbody>
