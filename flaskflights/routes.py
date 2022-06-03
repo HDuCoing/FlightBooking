@@ -64,30 +64,16 @@ def book():
         # specific date
         leave = form.leaveOn.data
         location = form.location.data
-        # day of week - monday is 0 - sunday is 6
-        dayLeave = leave.weekday()
         # create a range of weekdays for flight searc
         #todo if from sydney, diff time zone
         flights = AvailableFlights.query.filter(AvailableFlights.flyingFrom==location,AvailableFlights.dateOfFlight==leave)
-        if dayLeave == 0:
-            dayLeave = "Monday"
-        if dayLeave == 1:
-            dayLeave = "Tuesday"
-        if dayLeave == 2:
-            dayLeave = "Wednesday"
-        if dayLeave == 3:
-            dayLeave = "Thursday"
-        if dayLeave == 4:
-            dayLeave = "Friday"
-        if dayLeave == 5:
-            dayLeave = "Saturday"
-        if dayLeave == 6:
-            dayLeave = "Sunday"
-        return render_template('flight_info.html',headings=headings,flights=flights, dayOfFlight=dayLeave)
+        return render_template('flight_info.html',headings=headings,flights=flights)
     return render_template('book.html', form=form, title="Book")
 
 @app.route('/confirm')
 def confirm(flight):
+    print("confirm method")
+    redirect(url_for('confirm'))
     flightContent = flight.strip("Aircraft")
     flightContent = flightContent.strip("(")
     flightContent = flightContent.strip(")")
@@ -102,9 +88,11 @@ def confirm(flight):
     if "Sydney" in flyTo:
         price = "Price: $200"
     flight_info = [time, date, flyFrom, stopAt, flyTo, aircraft,price]
-    #if request.method == "POST":
-
-
+    #todo doesnt get past here
+    if request.method == "POST":
+        flash('Confirmed!', 'success')
+        print(flight_info)
+        return redirect(url_for('account'))
     return render_template('confirm_booking.html', title="Confirm", flight=flight_info)
 
 
