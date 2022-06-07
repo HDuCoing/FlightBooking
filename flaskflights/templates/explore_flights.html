@@ -1,27 +1,9 @@
 {% extends "layout.html" %}
-<script>
-
-    function setAction(form) {
-  form.action = "confirm_booking.html";
-  alert(form.action);
-  return false;
-}
-
-</script>
 {% block content %}
-<!-- breadcrumb for purchase process -->
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="home">Home</a></li>
-    <li class="breadcrumb-item"><a href="book">Search</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Book</li>
-  </ol>
-</nav>
-<div>
-<form method="GET">
-    <fieldset class="form-group">
-        <table class="flight_table table-striped border table-hover">
-        <!-- headers -->
+<div class="content-section">
+
+  <table class="table border">
+  <!-- headers -->
             <thead>
             <tr>
                 {% for header in headings %}
@@ -40,12 +22,9 @@
                 <td id="timeOfFlight">{{ flight.timeOfFlight }}</td>
                 <td id="aircraft">{{ flight.aircraft }}</td>
                 <td id="seatsLeft">{{ flight.seatsLeft }}</td>
-                <td><button id="button" class="btn btn-secondary" type="submit" name="{{flight}}">Book</button></td>
             </tr>
             {% endfor %}
-            </tbody>
-          </table>
-        </fieldset>
-    </form>
+  </table>
+
 </div>
 {% endblock content %}

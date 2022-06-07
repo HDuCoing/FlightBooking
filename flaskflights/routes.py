@@ -1,9 +1,10 @@
 from flask import render_template, url_for, redirect, request, flash
 from flask_login import login_user, current_user, logout_user, login_required
-
+from sqlalchemy.orm import session
+from sqlalchemy import update
 from flaskflights import app, db, bcrypt
 from flaskflights.forms import LoginForm, RegistrationForm, FlightSelect
-from flaskflights.models import User, AvailableFlights
+from flaskflights.models import User, AvailableFlights, Booking
 
 
 #routes
@@ -52,6 +53,7 @@ def register():
 @login_required
 def book():
     form = FlightSelect(request.form)
+    #todo
     if request.method == 'GET':
         args = request.args
         for element in args:
@@ -72,8 +74,7 @@ def book():
 
 @app.route('/confirm')
 def confirm(flight):
-    print("confirm method")
-    redirect(url_for('confirm'))
+    # isolate flight info for client's view.
     flightContent = flight.strip("Aircraft")
     flightContent = flightContent.strip("(")
     flightContent = flightContent.strip(")")
@@ -87,14 +88,23 @@ def confirm(flight):
     price = "Price: $50"
     if "Sydney" in flyTo:
         price = "Price: $200"
-    flight_info = [time, date, flyFrom, stopAt, flyTo, aircraft,price]
-    #todo doesnt get past here
-    if request.method == "POST":
-        flash('Confirmed!', 'success')
-        print(flight_info)
-        return redirect(url_for('account'))
+    flight_info = [time, date, flyFrom, stopAt, flyTo, aircraft, price]
+    #todo add flight to user's profile
+    booking = Booking(current_user, price, flight)
+    db.session.add(booking)
+    # update flight capacity
+    update(AvailableFlights)\
+        .where(AvailableFlights.c.id == flight.c.id)\
+        .values(capacity=flight.capacity-1)
+    db.session.commit()
+    flash("Booking Complete!", "success")
     return render_template('confirm_booking.html', title="Confirm", flight=flight_info)
 
+@app.route("/explore")
+def explore():
+    headings = ('Flying From', 'Stops', 'Flying To', 'Date', 'Day Of Flight', 'Time', 'Aircraft', 'Seats Left')
+    flights = AvailableFlights.query.all()
+    return render_template('explore_flights.html', title='Explore', headings=headings, flights=flights)
 
 @app.route("/logout")
 def logout():
