@@ -85,26 +85,27 @@ def confirm(flight):
     stopAt = flightContent[4].strip("'")
     flyTo = flightContent[5].strip("'")
     aircraft = flightContent[6].strip("'")
+    # set the price based on destination
     price = "Price: $50"
     if "Sydney" in flyTo:
         price = "Price: $200"
     flight_info = [time, date, flyFrom, stopAt, flyTo, aircraft, price]
+    # Search through flights and update seats/ add booking
     for flights in AvailableFlights.query.filter(AvailableFlights.dateOfFlight==date, AvailableFlights.flyingFrom==flyFrom, AvailableFlights.flyingTo==flyTo):
         if flights:
             bookingRef = (flyTo,str(flights.seatsLeft))
             bookingRef = "".join(bookingRef)
             titles=['Time: ', 'Date: ', 'From: ', 'Stops: ', 'To: ', 'Aircraft', 'Price: ']
-            booking = Booking(bookingRef=bookingRef, user=current_user, price=price, seat=flights.seatsLeft, flight=flights)
-            print(booking)
+            booking = Booking(bookingRef=bookingRef,
+                              price=price,
+                              seat=flights.seatsLeft,
+                              flight=flights)
             flash("Booking Complete!", "success")
             flights.seatsLeft -= 1
         else:
             flash("Error, no flight selected.", "error")
-    if booking:
-        db.session.add(booking)
-        db.session.commit()
-    else:
-        flash("Error", 'error')
+    db.session.add(booking)
+    db.session.commit()
     return render_template('confirm_booking.html', title="Confirm", flight=flight_info, reference=bookingRef, titles=titles)
 
 @app.route("/explore")

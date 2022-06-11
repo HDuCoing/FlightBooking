@@ -1,7 +1,7 @@
 from sqlalchemy import ForeignKey, Column, Integer, MetaData
 from sqlalchemy.orm import relationship
 from flaskflights import db, login_manager
-from flask_login import UserMixin
+from flask_login import UserMixin, current_user
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -14,7 +14,6 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(80),unique=True, nullable=False)
     email = db.Column(db.String(120),unique=True, nullable=False)
     password = db.Column(db.String(60),nullable=False)
-    bookings = relationship("Booking")
 
     def __repr__(self):
         return f"User('{self.username}','{self.email}')"
@@ -23,7 +22,7 @@ class Booking(db.Model):
     __tablename__ = 'booking'
     id = db.Column(db.Integer, primary_key=True)
     bookingRef = db.Column(db.String, nullable=False)
-    user = Column(Integer, ForeignKey("user.id"))
+    user = current_user
     price = db.Column(db.Integer, nullable=False)
     seat = db.Column(db.Integer, nullable=False)
     flight = Column(Integer, ForeignKey("available_flights.id"))
