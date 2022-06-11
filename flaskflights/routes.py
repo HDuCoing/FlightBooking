@@ -4,7 +4,7 @@ from sqlalchemy.orm import session
 from sqlalchemy import update
 from flaskflights import app, db, bcrypt
 from flaskflights.forms import LoginForm, RegistrationForm, FlightSelect
-from flaskflights.models import User, AvailableFlights, Booking
+from flaskflights.models import User, AvailableFlights, Booking, Aircraft
 
 
 #routes
@@ -79,26 +79,33 @@ def confirm(flight):
     flightContent = flightContent.strip("(")
     flightContent = flightContent.strip(")")
     flightContent = flightContent.split(",")
-    time = "Time: " + flightContent[0]
-    date = "Date: " + flightContent[1]
-    flyFrom = "Flying From: " + flightContent[3]
-    stopAt = "Stops At: " + flightContent[4]
-    flyTo = "Flying To: " + flightContent[5]
-    aircraft = "Aircraft: " + flightContent[6]
+    time = flightContent[0].strip("'")
+    date = flightContent[1].strip("'")
+    flyFrom = flightContent[3].strip("'")
+    stopAt = flightContent[4].strip("'")
+    flyTo = flightContent[5].strip("'")
+    aircraft = flightContent[6].strip("'")
     price = "Price: $50"
     if "Sydney" in flyTo:
         price = "Price: $200"
     flight_info = [time, date, flyFrom, stopAt, flyTo, aircraft, price]
-    #todo add flight to user's profile
-    booking = Booking(current_user, price, flight)
-    db.session.add(booking)
-    # update flight capacity
-    update(AvailableFlights)\
-        .where(AvailableFlights.c.id == flight.c.id)\
-        .values(capacity=flight.capacity-1)
-    db.session.commit()
-    flash("Booking Complete!", "success")
-    return render_template('confirm_booking.html', title="Confirm", flight=flight_info)
+    for flights in AvailableFlights.query.filter(AvailableFlights.dateOfFlight==date, AvailableFlights.flyingFrom==flyFrom, AvailableFlights.flyingTo==flyTo):
+        if flights:
+            bookingRef = (flyTo,str(flights.seatsLeft))
+            bookingRef = "".join(bookingRef)
+            titles=['Time: ', 'Date: ', 'From: ', 'Stops: ', 'To: ', 'Aircraft', 'Price: ']
+            booking = Booking(bookingRef=bookingRef, user=current_user, price=price, seat=flights.seatsLeft, flight=flights)
+            print(booking)
+            flash("Booking Complete!", "success")
+            flights.seatsLeft -= 1
+        else:
+            flash("Error, no flight selected.", "error")
+    if booking:
+        db.session.add(booking)
+        db.session.commit()
+    else:
+        flash("Error", 'error')
+    return render_template('confirm_booking.html', title="Confirm", flight=flight_info, reference=bookingRef, titles=titles)
 
 @app.route("/explore")
 def explore():

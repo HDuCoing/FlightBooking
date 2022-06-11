@@ -1,8 +1,5 @@
 from datetime import *
 import calendar
-
-from sqlalchemy import insert, schema, engine
-
 from flaskflights import db
 from flaskflights.models import AvailableFlights, Aircraft
 

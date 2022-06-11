@@ -9,11 +9,19 @@
     <div class="card-body">
         <form method="POST">
         <table class="table table-borderless">
-            {% for info in flight %}
-                <tr id="rows">
-                    <td>{{ info }}</td>
+            <tr><b>Booking Reference:</b> {{ reference }}</tr>
+            <div class="border">
+                <tr>
+                    {% for title in titles %}
+                    <td><b>{{ title }}</b></td>
+                    {% endfor %}
                 </tr>
-            {% endfor %}
+                <tr id="rows">
+                {% for info in flight %}
+                        <td>{{ info }}</td>
+                {% endfor %}
+                </tr>
+            </div>
         </table>
         </form>
     </div>
