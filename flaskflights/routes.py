@@ -86,22 +86,25 @@ def confirm(flight):
     flyTo = flightContent[5].strip("'")
     aircraft = flightContent[6].strip("'")
     # set the price based on destination
-    price = "Price: $50"
+    price = 50
     if "Sydney" in flyTo:
-        price = "Price: $200"
+        price = 200
     flight_info = [time, date, flyFrom, stopAt, flyTo, aircraft, price]
     # Search through flights and update seats/ add booking
-    for flights in AvailableFlights.query.filter(AvailableFlights.dateOfFlight==date, AvailableFlights.flyingFrom==flyFrom, AvailableFlights.flyingTo==flyTo):
+    for flights in AvailableFlights.query.filter(AvailableFlights.timeOfFlight==time, AvailableFlights.dateOfFlight==date, AvailableFlights.flyingFrom==flyFrom, AvailableFlights.flyingTo==flyTo):
         if flights:
-            bookingRef = (flyTo,str(flights.seatsLeft))
+            flightList = [flights]
+            flight = flightList[0]
+            bookingRef = (flyTo,str(flight.seatsLeft))
             bookingRef = "".join(bookingRef)
             titles=['Time: ', 'Date: ', 'From: ', 'Stops: ', 'To: ', 'Aircraft', 'Price: ']
             booking = Booking(bookingRef=bookingRef,
                               price=price,
-                              seat=flights.seatsLeft,
-                              flight=flights)
+                              user=current_user.username,
+                              seat=flight.seatsLeft,
+                              flight=flight.id)
             flash("Booking Complete!", "success")
-            flights.seatsLeft -= 1
+            flight.seatsLeft = flight.seatsLeft-1
         else:
             flash("Error, no flight selected.", "error")
     db.session.add(booking)
@@ -122,5 +125,13 @@ def logout():
 @app.route("/account")
 @login_required
 def account():
-    return render_template('account.html', title='Account')
+    headings = ('Booking Reference', 'Flying From', 'Stops', 'Flying To', 'Date', 'Day Of Flight', 'Time', 'Aircraft', 'Cancel')
+    bill = []
+    for book in Booking.query.filter(Booking.user==current_user.username):
+        for flight in AvailableFlights.query.filter(AvailableFlights.id==book.id):
+            print(book)
+            print(flight)
+            booking = (book.bookingRef + flight)
+            bill.append(book.price)
+    return render_template('account.html', title='Account', bookings=booking, headings=headings)
 

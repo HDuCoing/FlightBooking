@@ -22,13 +22,13 @@ class Booking(db.Model):
     __tablename__ = 'booking'
     id = db.Column(db.Integer, primary_key=True)
     bookingRef = db.Column(db.String, nullable=False)
-    user = current_user
+    user = db.Column(db.String, nullable=False)
     price = db.Column(db.Integer, nullable=False)
     seat = db.Column(db.Integer, nullable=False)
     flight = Column(Integer, ForeignKey("available_flights.id"))
 
     def __repr__(self):
-        return f"Booking('{self.bookingRef}', '{self.user}', '{self.flight}', '{self.price}')"
+        return f"Booking('{self.bookingRef}', '{self.user}', '{self.flight}', '{self.price}, {self.seat}')"
 
 # aircraft name + model, and capacity
 class Aircraft(db.Model):

@@ -4,7 +4,23 @@
 <div class="content-section">
  <h1>Welcome, {{current_user.username}}</h1>
  <div class="card">
-  {{ booking }}
+  <table class="flight_table table-striped border table-hover">
+   <thead>
+    <tr>
+      {% for header in headings %}
+      <th>{{ header }}</th>
+      {% endfor %}
+    </tr>
+    </thead>
+   <tbody>
+   {% for flight in bookings %}
+   <tr id="rows">
+    <td>{{ flight }}</td>
+    <td><button id="button" class="btn btn-secondary" type="submit" name="{{flight}}">Cancel</button></td>
+   </tr>
+   {% endfor %}
+   </tbody>
+  </table>
  </div>
 </div>
 {% endblock content %}
