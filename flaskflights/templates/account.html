@@ -3,8 +3,8 @@
 {% block content %}
 <div class="content-section">
  <h1>Welcome, {{current_user.username}}</h1>
- <div class="card">
-  <table class="flight_table table-striped border table-hover">
+ <div class="container xxl">
+  <table class="booking_table table-striped border table-hover">
    <thead>
     <tr>
       {% for header in headings %}
@@ -13,12 +13,18 @@
     </tr>
     </thead>
    <tbody>
-   {% for flight in bookings %}
    <tr id="rows">
-    <td>{{ flight }}</td>
-    <td><button id="button" class="btn btn-secondary" type="submit" name="{{flight}}">Cancel</button></td>
+    <td>{{ booking.bookingRef }}</td>
+    <td id="flyingFrom">{{ flight.flyingFrom }}</td>
+    <td id="stopsAt">{{ flight.stopsAt }}</td>
+    <td id="flyingTo">{{ flight.flyingTo }}</td>
+    <td id="dateOfFlight">{{ flight.dateOfFlight }}</td>
+    <td id="timeOfFlight">{{ flight.timeOfFlight }}</td>
+    <td id="aircraft">{{ flight.aircraft }}</td>
+    <td id="seat">{{ booking.seat }}</td>
+    <td id="price">{{ booking.price }}</td>
+    <td><button id="button" class="btn btn-secondary" type="submit">Cancel</button></td>
    </tr>
-   {% endfor %}
    </tbody>
   </table>
  </div>

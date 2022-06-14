@@ -1,13 +1,10 @@
 from flask import render_template, url_for, redirect, request, flash
 from flask_login import login_user, current_user, logout_user, login_required
-from sqlalchemy.orm import session
-from sqlalchemy import update
 from flaskflights import app, db, bcrypt
 from flaskflights.forms import LoginForm, RegistrationForm, FlightSelect
 from flaskflights.models import User, AvailableFlights, Booking, Aircraft
 
 
-#routes
 @app.route("/")
 @app.route("/home")
 @app.route("/index")
@@ -48,12 +45,10 @@ def register():
     return render_template('register.html', form=form, title="Register")
 
 
-#todo make search work
 @app.route('/book', methods=['GET', 'POST'])
 @login_required
 def book():
     form = FlightSelect(request.form)
-    #todo
     if request.method == 'GET':
         args = request.args
         for element in args:
@@ -105,8 +100,6 @@ def confirm(flight):
                               flight=flight.id)
             flash("Booking Complete!", "success")
             flight.seatsLeft = flight.seatsLeft-1
-        else:
-            flash("Error, no flight selected.", "error")
     db.session.add(booking)
     db.session.commit()
     return render_template('confirm_booking.html', title="Confirm", flight=flight_info, reference=bookingRef, titles=titles)
@@ -125,13 +118,10 @@ def logout():
 @app.route("/account")
 @login_required
 def account():
-    headings = ('Booking Reference', 'Flying From', 'Stops', 'Flying To', 'Date', 'Day Of Flight', 'Time', 'Aircraft', 'Cancel')
-    bill = []
+    headings = ('Booking Reference', 'Flying From', 'Stops', 'Flying To', 'Date', 'Time', 'Aircraft', 'Seat','Price', 'Cancel')
     for book in Booking.query.filter(Booking.user==current_user.username):
         for flight in AvailableFlights.query.filter(AvailableFlights.id==book.id):
-            print(book)
-            print(flight)
-            booking = (book.bookingRef + flight)
-            bill.append(book.price)
-    return render_template('account.html', title='Account', bookings=booking, headings=headings)
+            aBooking = book
+            aFlight = flight
+    return render_template('account.html', title='Account', headings=headings, booking=aBooking, flight=aFlight)
 
