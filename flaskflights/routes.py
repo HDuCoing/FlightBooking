@@ -88,18 +88,21 @@ def confirm(flight):
     # Search through flights and update seats/ add booking
     for flights in AvailableFlights.query.filter(AvailableFlights.timeOfFlight==time, AvailableFlights.dateOfFlight==date, AvailableFlights.flyingFrom==flyFrom, AvailableFlights.flyingTo==flyTo):
         if flights:
-            flightList = [flights]
-            flight = flightList[0]
-            bookingRef = (flyTo,str(flight.seatsLeft))
-            bookingRef = "".join(bookingRef)
-            titles=['Time: ', 'Date: ', 'From: ', 'Stops: ', 'To: ', 'Aircraft', 'Price: ']
-            booking = Booking(bookingRef=bookingRef,
-                              price=price,
-                              user=current_user.username,
-                              seat=flight.seatsLeft,
-                              flight=flight.id)
-            flash("Booking Complete!", "success")
-            flight.seatsLeft = flight.seatsLeft-1
+            if flight.seatsLeft >= 1:
+                flightList = [flights]
+                flight = flightList[0]
+                bookingRef = (flyTo,str(flight.seatsLeft))
+                bookingRef = "".join(bookingRef)
+                titles=['Time: ', 'Date: ', 'From: ', 'Stops: ', 'To: ', 'Aircraft', 'Price: ']
+                booking = Booking(bookingRef=bookingRef,
+                                  price=price,
+                                  user=current_user.username,
+                                  seat=flight.seatsLeft,
+                                  flight=flight.id)
+                flash("Booking Complete!", "success")
+                flight.seatsLeft = flight.seatsLeft-1
+            else:
+                flash("No seats left on this flight", 'error')
     db.session.add(booking)
     db.session.commit()
     return render_template('confirm_booking.html', title="Confirm", flight=flight_info, reference=bookingRef, titles=titles)
@@ -115,10 +118,23 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
-@app.route("/account")
+@app.route("/account", methods=['GET', 'POST'])
 @login_required
 def account():
+    if request.method=="GET":
+        args = request.args
+        for element in args:
+            flight = element
+            if flight:
+                for b in Booking.query.filter(Booking.user == current_user.username):
+                    for f in AvailableFlights.query.filter(AvailableFlights.id == b.flight):
+                        f.seatsLeft = f.seatsLeft+1
+                        db.session.delete(b)
+                        db.session.commit()
+
     headings = ('Booking Reference', 'Flying From', 'Stops', 'Flying To', 'Date', 'Time', 'Aircraft', 'Seat','Price', 'Cancel')
+    aBooking = None
+    aFlight = None
     for book in Booking.query.filter(Booking.user==current_user.username):
         for flight in AvailableFlights.query.filter(AvailableFlights.id==book.id):
             aBooking = book

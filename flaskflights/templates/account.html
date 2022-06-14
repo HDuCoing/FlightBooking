@@ -4,29 +4,31 @@
 <div class="content-section">
  <h1>Welcome, {{current_user.username}}</h1>
  <div class="container xxl">
-  <table class="booking_table table-striped border table-hover">
-   <thead>
-    <tr>
-      {% for header in headings %}
-      <th>{{ header }}</th>
-      {% endfor %}
-    </tr>
-    </thead>
-   <tbody>
-   <tr id="rows">
-    <td>{{ booking.bookingRef }}</td>
-    <td id="flyingFrom">{{ flight.flyingFrom }}</td>
-    <td id="stopsAt">{{ flight.stopsAt }}</td>
-    <td id="flyingTo">{{ flight.flyingTo }}</td>
-    <td id="dateOfFlight">{{ flight.dateOfFlight }}</td>
-    <td id="timeOfFlight">{{ flight.timeOfFlight }}</td>
-    <td id="aircraft">{{ flight.aircraft }}</td>
-    <td id="seat">{{ booking.seat }}</td>
-    <td id="price">{{ booking.price }}</td>
-    <td><button id="button" class="btn btn-secondary" type="submit">Cancel</button></td>
-   </tr>
-   </tbody>
-  </table>
+  <form method="GET">
+    <table class="booking_table table-striped border table-hover">
+     <thead>
+      <tr>
+        {% for header in headings %}
+        <th>{{ header }}</th>
+        {% endfor %}
+      </tr>
+      </thead>
+     <tbody>
+     <tr id="rows">
+      <td>{{ booking.bookingRef }}</td>
+      <td id="flyingFrom">{{ flight.flyingFrom }}</td>
+      <td id="stopsAt">{{ flight.stopsAt }}</td>
+      <td id="flyingTo">{{ flight.flyingTo }}</td>
+      <td id="dateOfFlight">{{ flight.dateOfFlight }}</td>
+      <td id="timeOfFlight">{{ flight.timeOfFlight }}</td>
+      <td id="aircraft">{{ flight.aircraft }}</td>
+      <td id="seat">{{ booking.seat }}</td>
+      <td id="price">{{ booking.price }}</td>
+      <td><button id="button" class="btn btn-secondary" type="submit" name="{{flight}}">Cancel</button></td>
+     </tr>
+     </tbody>
+    </table>
+  </form>
  </div>
 </div>
 {% endblock content %}
