@@ -1,38 +1,38 @@
 {% extends "layout.html" %}
+
 {% block content %}
-<div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="false">
-  <div class="carousel-indicators">
-    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
-    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+<div class="container">
+  <div class="row">
+    <div class="col">
+        <div class="card" style="width: 18rem;">
+          <img src="static/images/sydney-carousol.jpeg" width="200" height="175" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">Travel to Sydney</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+          </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card" style="width: 18rem;">
+          <img src="static/images/rotorua-carousol.jpeg" width="200" height="175" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">Travel to Rotorua</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+          </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card" style="width: 18rem;">
+          <img src="static/images/greatbarrierisland_carousol.jpeg" width="200" height="175" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">Travel to Great Barrier Island</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+          </div>
+        </div>
+    </div>
   </div>
-  <div class="carousel-inner">
-    <div class="carousel-item active">
-      <img src="static/images/sydney-carousol.jpeg" class="d-block w-100" alt="sydney">
-      <div class="carousel-caption d-none d-md-block">
-        <h5>Sydney, Austrailia</h5>
-      </div>
-    </div>
-    <div class="carousel-item">
-      <img src="static/images/rotorua-carousol.jpeg" class="d-block w-100" alt="rotorua">
-      <div class="carousel-caption d-none d-md-block">
-        <h5>Rotorua, New Zealand</h5>
-      </div>
-    </div>
-    <div class="carousel-item">
-      <img src="static/images/greatbarrierisland_carousol.jpeg" class="d-block w-100" alt="gbi">
-      <div class="carousel-caption d-none d-md-block">
-        <h5>Great Barrier Island</h5>
-      </div>
-    </div>
-  </div>
-  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Previous</span>
-  </button>
-  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Next</span>
-  </button>
 </div>
 {% endblock content %}
