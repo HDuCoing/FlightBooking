@@ -69,6 +69,7 @@ def book():
 
 @app.route('/confirm')
 def confirm(flight):
+    map_img = ""
     # isolate flight info for client's view.
     flightContent = flight.strip("Aircraft")
     flightContent = flightContent.strip("(")
@@ -87,25 +88,46 @@ def confirm(flight):
     flight_info = [time, date, flyFrom, stopAt, flyTo, aircraft, price]
     # Search through flights and update seats/ add booking
     for flights in AvailableFlights.query.filter(AvailableFlights.timeOfFlight==time, AvailableFlights.dateOfFlight==date, AvailableFlights.flyingFrom==flyFrom, AvailableFlights.flyingTo==flyTo):
-        if flights:
-            if flight.seatsLeft >= 1:
-                flightList = [flights]
-                flight = flightList[0]
-                bookingRef = (flyTo,str(flight.seatsLeft))
-                bookingRef = "".join(bookingRef)
-                titles=['Time: ', 'Date: ', 'From: ', 'Stops: ', 'To: ', 'Aircraft', 'Price: ']
-                booking = Booking(bookingRef=bookingRef,
-                                  price=price,
-                                  user=current_user.username,
-                                  seat=flight.seatsLeft,
-                                  flight=flight.id)
-                flash("Booking Complete!", "success")
-                flight.seatsLeft = flight.seatsLeft-1
-            else:
-                flash("No seats left on this flight", 'error')
-    db.session.add(booking)
+        if flights.seatsLeft <= 0:
+            flash("Flight is full.", 'error')
+        elif flights:
+            flightList = [flights]
+            flight = flightList[0]
+            bookingRef = (flyTo,str(flight.seatsLeft))
+            bookingRef = "".join(bookingRef)
+            titles=['Time: ', 'Date: ', 'From: ', 'Stops: ', 'To: ', 'Aircraft', 'Price: ']
+            booking = Booking(bookingRef=bookingRef,
+                              price=price,
+                              user=current_user.username,
+                              seat=flight.seatsLeft,
+                              flight=flight.id)
+            db.session.add(booking)
+            flash("Booking Complete!", "success")
+            flight.seatsLeft = flight.seatsLeft-1
+        else:
+            flash("No seats left on this flight", 'error')
+        # define image to show map of flight path on confirmation
+        if flight.flyingFrom == "Dairy Flat":
+            if flight.flyingTo == "Rotorua":
+                map_img = "DFtoROTO.png"
+            if flight.flyingTo == "Great Barrier Island":
+                map_img = "DFtoGBI.png"
+            if flight.flyingTo == "Tekapo":
+                map_img = "DFtoTEKAPO.png"
+            if flight.flyingTo == "Sydney":
+                map_img = "DFtoROTOtoSYD.png"
+            if flight.flyingTo == "Tuuta":
+                map_img = "DFtoTUUTA.png"
+        if flight.flyingFrom == "Rotorua":
+            if flight.flyingTo == "Dairy Flat":
+                map_img = "ROTOtoDF.png"
+            if flight.flyingTo == "Sydney":
+                map_img = "ROTOtoSYD.png"
+        if flight.flyingFrom == "Sydney":
+            if flight.flyingTo == "Dairy Flat":
+                map_img = "SYDtoDF.png"
     db.session.commit()
-    return render_template('confirm_booking.html', title="Confirm", flight=flight_info, reference=bookingRef, titles=titles)
+    return render_template('confirm_booking.html', title="Confirm", flight=flight_info, reference=bookingRef, titles=titles, map=map_img)
 
 @app.route("/explore")
 def explore():
@@ -133,11 +155,14 @@ def account():
                         db.session.commit()
 
     headings = ('Booking Reference', 'Flying From', 'Stops', 'Flying To', 'Date', 'Time', 'Aircraft', 'Seat','Price', 'Cancel')
-    aBooking = None
-    aFlight = None
-    for book in Booking.query.filter(Booking.user==current_user.username):
-        for flight in AvailableFlights.query.filter(AvailableFlights.id==book.id):
+    flightList = []
+    bookingRefs = []
+    book = None
+    for book in Booking.query.filter(Booking.user == current_user.username):
+        for flight in AvailableFlights.query.filter(AvailableFlights.id==book.flight):
             aBooking = book
             aFlight = flight
-    return render_template('account.html', title='Account', headings=headings, booking=aBooking, flight=aFlight)
+            flightList.append(aFlight)
+            bookingRefs.append(aBooking.bookingRef)
+    return render_template('account.html', title='Account', headings=headings, list=flightList, refs=bookingRefs, booking=book)
 

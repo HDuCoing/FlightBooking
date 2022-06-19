@@ -14,18 +14,22 @@
       </tr>
       </thead>
      <tbody>
-     <tr id="rows">
-      <td>{{ booking.bookingRef }}</td>
-      <td id="flyingFrom">{{ flight.flyingFrom }}</td>
-      <td id="stopsAt">{{ flight.stopsAt }}</td>
-      <td id="flyingTo">{{ flight.flyingTo }}</td>
-      <td id="dateOfFlight">{{ flight.dateOfFlight }}</td>
-      <td id="timeOfFlight">{{ flight.timeOfFlight }}</td>
-      <td id="aircraft">{{ flight.aircraft }}</td>
-      <td id="seat">{{ booking.seat }}</td>
-      <td id="price">{{ booking.price }}</td>
-      <td><button id="button" class="btn btn-secondary" type="submit" name="{{flight}}">Cancel</button></td>
-     </tr>
+     {% for flight in list %}
+     {% for ref in refs %}
+       <tr id="rows">
+        <td>{{ ref }}</td>
+        <td id="flyingFrom">{{ flight.flyingFrom }}</td>
+        <td id="stopsAt">{{ flight.stopsAt }}</td>
+        <td id="flyingTo">{{ flight.flyingTo }}</td>
+        <td id="dateOfFlight">{{ flight.dateOfFlight }}</td>
+        <td id="timeOfFlight">{{ flight.timeOfFlight }}</td>
+        <td id="aircraft">{{ flight.aircraft }}</td>
+        <td id="seat">{{ booking.seat }}</td>
+        <td id="price">{{ booking.price }}</td>
+        <td><button id="button" class="btn btn-secondary" type="submit" name="{{flight}}">Cancel</button></td>
+       </tr>
+     {% endfor %}
+     {% endfor %}
      </tbody>
     </table>
   </form>
