@@ -2,8 +2,7 @@ from flask import render_template, url_for, redirect, request, flash
 from flask_login import login_user, current_user, logout_user, login_required
 from flaskflights import app, db, bcrypt
 from flaskflights.forms import LoginForm, RegistrationForm, FlightSelect
-from flaskflights.models import User, AvailableFlights, Booking, Aircraft
-
+from flaskflights.models import User, AvailableFlights, Booking, FlightClub
 
 @app.route("/")
 @app.route("/home")
@@ -11,10 +10,25 @@ from flaskflights.models import User, AvailableFlights, Booking, Aircraft
 def home():
     return render_template('home.html', title='Home')
 
-@app.route("/about")
-def about():
-    return render_template('about.html', title='About')
+# Point club system, if user is logged in and theyre not already a member they may join
+@app.route("/flightclub", methods=['GET', 'POST'])
+def flightclub():
+    if request.method=="POST":
+        # If user isn't logged in, redirect
+        if current_user.is_anonymous:
+            return redirect(url_for('login'))
+        else:
+            # If user is already in system, redirect
+            for members in FlightClub.query.filter(FlightClub.member==current_user.username):
+                    if members:
+                        flash("Already a member", 'error')
+                        return redirect(url_for('account'))
+            member = FlightClub(member=current_user.username, points=0)
+            db.session.add(member)
+            db.session.commit()
+    return render_template('flightclub.html', title='Join | Flight Club')
 
+# Simple login system that validates user information
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -62,15 +76,14 @@ def book():
         leave = form.leaveOn.data
         location = form.location.data
         # create a range of weekdays for flight searc
-        #todo if from sydney, diff time zone
         flights = AvailableFlights.query.filter(AvailableFlights.flyingFrom==location,AvailableFlights.dateOfFlight==leave)
         return render_template('flight_info.html',headings=headings,flights=flights)
     return render_template('book.html', form=form, title="Book")
 
 @app.route('/confirm')
+@login_required
 def confirm(flight):
     map_img = ""
-    # isolate flight info for client's view.
     flightContent = flight.strip("Aircraft")
     flightContent = flightContent.strip("(")
     flightContent = flightContent.strip(")")
@@ -93,8 +106,9 @@ def confirm(flight):
         elif flights:
             flightList = [flights]
             flight = flightList[0]
-            bookingRef = (flyTo,str(flight.seatsLeft))
-            bookingRef = "".join(bookingRef)
+            # Generate a booking reference based on some flight information
+            bookingRef = ("REF",str(flight.id),str(flight.seatsLeft))
+            bookingRef = ''.join(bookingRef)
             titles=['Time: ', 'Date: ', 'From: ', 'Stops: ', 'To: ', 'Aircraft', 'Price: ']
             booking = Booking(bookingRef=bookingRef,
                               price=price,
@@ -102,6 +116,12 @@ def confirm(flight):
                               seat=flight.seatsLeft,
                               flight=flight.id)
             db.session.add(booking)
+            for member in FlightClub.query.filter(FlightClub.member==current_user.username):
+                if member:
+                    if flyTo == 'Sydney':
+                        member.points = member.points+1
+                    else:
+                        member.points = member.points+0.5
             flash("Booking Complete!", "success")
             flight.seatsLeft = flight.seatsLeft-1
         else:
@@ -143,14 +163,24 @@ def logout():
 @app.route("/account", methods=['GET', 'POST'])
 @login_required
 def account():
+    points=None
+    for member in FlightClub.query.filter(FlightClub.member==current_user.username):
+        if member:
+            points = member.points
     if request.method=="GET":
         args = request.args
         for element in args:
-            flight = element
-            if flight:
-                for b in Booking.query.filter(Booking.user == current_user.username):
+            flightRef = element
+            if flightRef:
+                for b in Booking.query.filter(Booking.user == current_user.username, Booking.bookingRef == flightRef):
                     for f in AvailableFlights.query.filter(AvailableFlights.id == b.flight):
                         f.seatsLeft = f.seatsLeft+1
+                        for member in FlightClub.query.filter(FlightClub.member == current_user.username):
+                            if member:
+                                if f.flyingTo == 'Sydney':
+                                    member.points = member.points - 1
+                                else:
+                                    member.points = member.points - 0.5
                         db.session.delete(b)
                         db.session.commit()
 
@@ -164,5 +194,5 @@ def account():
             aFlight = flight
             flightList.append(aFlight)
             bookingRefs.append(aBooking.bookingRef)
-    return render_template('account.html', title='Account', headings=headings, list=flightList, refs=bookingRefs, booking=book)
+    return render_template('account.html', title='Account', headings=headings, list=flightList, refs=bookingRefs, booking=book, points=points)
 

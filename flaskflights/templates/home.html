@@ -1,38 +1,22 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div class="container">
-  <div class="row">
+<div class="container-fluid">
+  <h2>Welcome to AirDuCoing</h2>
+<figure>
+  <blockquote class="blockquote">
+    <p>"Once you have tasted flight, you will forever walk the earth with your eyes turned skyward, for there you have been, and there you will always long to return."</p>
+  </blockquote>
+  <figcaption class="blockquote-footer">
+    Leonardo da Vinci
+  </figcaption>
+</figure>
+  <div class="row align-items-start">
     <div class="col">
-        <div class="card" style="width: 18rem;">
-          <img src="static/images/sydney-carousol.jpeg" width="200" height="175" class="card-img-top" alt="...">
-          <div class="card-body">
-            <h5 class="card-title">Travel to Sydney</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-          </div>
-        </div>
+<img src="static/images/sydney-carousol.jpeg" class="rounded" width="230" height="200" alt="...">
+<img src="static/images/rotorua-carousol.jpeg" class="rounded" width="230" height="200" alt="...">
+<img src="static/images/greatbarrierisland_carousol.jpeg" class="rounded" width="230" height="200" alt="...">
     </div>
-    <div class="col">
-        <div class="card" style="width: 18rem;">
-          <img src="static/images/rotorua-carousol.jpeg" width="200" height="175" class="card-img-top" alt="...">
-          <div class="card-body">
-            <h5 class="card-title">Travel to Rotorua</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-          </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card" style="width: 18rem;">
-          <img src="static/images/greatbarrierisland_carousol.jpeg" width="200" height="175" class="card-img-top" alt="...">
-          <div class="card-body">
-            <h5 class="card-title">Travel to Great Barrier Island</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-          </div>
-        </div>
-    </div>
-  </div>
+
 </div>
 {% endblock content %}

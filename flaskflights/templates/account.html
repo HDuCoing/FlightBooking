@@ -3,13 +3,17 @@
 {% block content %}
 <div class="content-section">
  <h1>Welcome, {{current_user.username}}</h1>
+ <h4>Upcoming Flights:</h4>
  <div class="container xxl">
+     {% if points != None %}
+        <p>Points: {{points}}</p>
+     {% endif %}
   <form method="GET">
     <table class="booking_table table-striped border table-hover">
      <thead>
       <tr>
         {% for header in headings %}
-        <th>{{ header }}</th>
+        <th style="padding: 10px">{{ header }}</th>
         {% endfor %}
       </tr>
       </thead>
@@ -26,7 +30,7 @@
         <td id="aircraft">{{ flight.aircraft }}</td>
         <td id="seat">{{ booking.seat }}</td>
         <td id="price">{{ booking.price }}</td>
-        <td><button id="button" class="btn btn-secondary" type="submit" name="{{flight}}">Cancel</button></td>
+        <td><button id="button" class="btn btn-secondary" type="submit" name="{{ ref }}">Cancel</button></td>
        </tr>
      {% endfor %}
      {% endfor %}
@@ -35,4 +39,36 @@
   </form>
  </div>
 </div>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="content-section">
+            <h3>FlightClub Balance</h3>
+            <p class='text-muted'>Use your FlightClub points towards your payments!
+              <ul class="list-group">
+                <li class="list-group-item list-group-item-light">Balance</li>
+              </ul>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="content-section">
+            <h3>Make a Payment</h3>
+            <p class='text-muted'>Pay towards your balance before your next flight!
+              <ul class="list-group">
+                <li class="list-group-item list-group-item-light">Pay</li>
+              </ul>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="content-section">
+            <h3>Invite Friends</h3>
+            <p class='text-muted'>Invite your friends to fly with AirDuCoing!
+              <ul class="list-group">
+                <li class="list-group-item list-group-item-light">Invite</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
 {% endblock content %}

@@ -9,11 +9,10 @@ COPY requirements.txt /app
 
 RUN pip install -r requirements.txt
 
-COPY ../.. /app/
-RUN rm -r env/
+COPY .. /app/
 
 EXPOSE 8000
 
-ENV FLASK_APP flask_website
+ENV FLASK_APP flaskflights
 CMD python -m flask run -h 0.0.0.0 -p 8000
 

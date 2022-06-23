@@ -7,6 +7,17 @@ from flask_login import UserMixin, current_user
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+#flightclub members
+class FlightClub(db.Model):
+    __tablename__ = "flight_club"
+    id = db.Column(db.Integer, primary_key=True)
+    member = db.Column(db.String, nullable=False)
+    points = db.Column(db.Integer)
+
+    def __repr__(self):
+        return f"FlightClub('{self.member}','{self.points}')"
+
+
 # user details
 class User(db.Model, UserMixin):
     __tablename__ = 'user'
